@@ -33,13 +33,15 @@ if ($$info{a} && $$info{a} eq 'search') {
 
 sub createPDF {
     my $data = decode_json($$info{mydata});
-    WarLord::createPDF($data, 'test');
     my $name = $$data[0]{name};
+    my $ts = time;
+    WarLord::createPDF($data, $ts);
+    print "Content-Type:application/pdf\n";
     print "Content-Disposition: attachment; filename=\"$name.pdf\"\n";
     print "\n";
-    my $pdf = read_file('test.pdf');
+    my $pdf = read_file("$ts.pdf");
     print $pdf;
-    unlink 'test.pdf'
+    unlink "$ts.pdf";
 }
 
 sub search {
