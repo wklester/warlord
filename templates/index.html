@@ -1,0 +1,133 @@
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="jquery.json-2.4.js"></script>
+<script>
+var card_list_json = [];
+var card_counter = 0;
+
+function getSearch()
+{
+  \$.ajax({
+    type: "GET",
+    url: 'index.cgi',
+    cache: false,
+    data: "name=" + \$('#card_name').val() + "&a=search",
+    success: function(data) {
+      \$('#search_results_div').html(data);
+    }
+  });
+}
+
+function changeImage() {
+  var img_html = '<img width="300" src="http://www.temple-of-lore.com/spoiler/' + \$("#search_results").val() + '"/>';
+  \$('#card_image').html(img_html);
+}
+
+function addToList() {
+  var card_name = \$("#search_results option:selected").text();
+
+  if (findCardName(card_name) >= 0) {
+    alert("Card " + card_name + "is already in deck.");
+    return
+  }
+
+  card_list_json.push({ num:1, name: card_name });
+  
+  rebuildCardList();  
+}
+
+function changeNumber(i) {
+  card_list_json[i].num = \$('#card' + i).val();
+  rebuildCardList(); 
+}
+
+function deleteNumber(i) {
+  card_list_json.splice(i,1);
+  rebuildCardList(); 
+}
+
+function createPDF() {
+  //\$.ajax({
+  //  type: "GET",
+  //  url: 'index.cgi',
+  //  cache: false,
+  //  data: "mydata=" + \$.toJSON(card_list_json) + "&a=pdf",
+  //  success: function(data) {
+  //    alert('back');
+  //    \$('#search_results_div').html(data);
+  //  }
+  //});
+
+  var uri = 'index.cgi?a=pdf&mydata=' + \$.toJSON(card_list_json);
+  window.open(uri);
+}
+
+function findCardName(name) {
+  for (var i=0; i<card_list_json.length; i++) {
+    if (card_list_json[i].name == name) {
+      return i
+    }
+  }
+
+  return -1
+}
+
+function rebuildCardList() {
+  var html = "<table>";
+  var card_ct = 0;
+  for (var i=0; i<card_list_json.length; i++) {
+    html = html + "<tr>";
+    var funcCall = "changeNumber(\"" + i + "\")";
+    html = html + "<td><select id='card" + i + "' onchange='" + funcCall + "'>";
+    for (var j = 1; j <= 3; j++) {
+      if (card_list_json[i].num == j) {
+        html = html + "<option selected>" + j + "</option>";
+      } else {
+        html = html + "<option>" + j + "</option>";
+      }
+    }
+    html = html + "</select></td>";
+    html = html + "<td>" + card_list_json[i].name + "</td>";
+    var funcCall2 = "deleteNumber(\"" + i + "\")";
+    html = html + "<td><a href='#' onclick='" + funcCall2 + "'> x </a>";
+    html = html + "</tr>";
+    card_ct = card_ct + parseInt(card_list_json[i].num);
+  }
+  html = html + "</table>";
+  html = html + "<hr>" + card_ct + " cards";
+  html = html + "<hr><a href='#' onclick='createPDF()'>create pdf</a>"
+  \$('#card_list').html(html);
+}
+
+</script>
+</head>
+<body>
+<form>
+  Name: <input type="text" id="card_name" name="card_name"/>
+  <input type="button" onclick="getSearch()" value="Search"/>
+  <script>
+    \$('#card_name').keypress(function(event){
+      var keycode = (event.keyCode ? event.keyCode : event.which);
+      if(keycode == '13'){
+        getSearch();
+        return false;
+      }
+    });
+  </script>
+
+  <table cellpadding=10 cellspacing=10 height="100%">
+  <tr><td valign=top>
+  <div id="search_results_div">
+  </div>
+  </td><td valign=top>
+  <div id="card_image">
+  </div>
+  <td valign=top>
+  <div id="card_list">
+  </div>
+  </td></tr>
+  </table>
+</form>
+</body>
+</html>
