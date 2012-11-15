@@ -1,5 +1,11 @@
 <html>
 <head>
+<style>
+  a {
+    text-decoration: none;
+    color: #A60000;
+  }
+</style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="jquery.json-2.4.js"></script>
 <script>
@@ -48,17 +54,6 @@ function deleteNumber(i) {
 }
 
 function createPDF() {
-  //\$.ajax({
-  //  type: "GET",
-  //  url: 'index.cgi',
-  //  cache: false,
-  //  data: "mydata=" + \$.toJSON(card_list_json) + "&a=pdf",
-  //  success: function(data) {
-  //    alert('back');
-  //    \$('#search_results_div').html(data);
-  //  }
-  //});
-
   var uri = 'index.cgi?a=pdf&mydata=' + \$.toJSON(card_list_json);
   window.open(uri);
 }
@@ -102,10 +97,16 @@ function rebuildCardList() {
 
 </script>
 </head>
-<body>
+<body style="margin:0px">
+<div style="width:100%; height:50px; background-color: #A60000;">
+  <center><h1 style="color:white">Jank Yanker</h1></center>
+</div>
 <form>
-  Name: <input type="text" id="card_name" name="card_name"/>
-  <input type="button" onclick="getSearch()" value="Search"/>
+  <fieldset width="100%">
+  <legend>Search</legend>
+    Name: <input type="text" id="card_name" name="card_name"/>
+    <input type="button" onclick="getSearch()" value="Search"/>
+  </fieldset>
   <script>
     \$('#card_name').keypress(function(event){
       var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -116,15 +117,29 @@ function rebuildCardList() {
     });
   </script>
 
-  <table cellpadding=10 cellspacing=10 height="100%">
-  <tr><td valign=top>
+  <table cellpadding=10 cellspacing=10 height="75%">
+  <tr><td valign=top height="100%" style="border: 3px double black">
   <div id="search_results_div">
+    <fieldset>
+      <legend>Search Results</legend>
+      <select name="search_results" id="search_results" size="20" style="width: 200px;height:80%" onchange="changeImage()">
+      </select>
+      <br/>
+      <input type="button" value=" + " onclick="addToList()" disabled/>
+    </fieldset>
   </div>
-  </td><td valign=top>
-  <div id="card_image">
-  </div>
-  <td valign=top>
-  <div id="card_list">
+  </td><td valign=top width="300" height="100%" style="border:3px double black">
+    <fieldset style="height:100%"> 
+    <legend>Card</legend>
+    <div id="card_image">
+    </div>
+    </fieldset>
+  <td valign=top width="300" height="100%" style="border:3px double black">
+    <fieldset style="height:100%"> 
+    <legend>Card List</legend>
+    <div id="card_list">
+    </div>
+    </fieldset>
   </div>
   </td></tr>
   </table>
