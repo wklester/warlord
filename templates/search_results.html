@@ -1,10 +1,7 @@
-<fieldset>
-<legend>Search Results</legend>
-<select name="search_results" id="search_results" size="20" style="width: 200px;height:80%" onchange="changeImage()">
+<select name="search_results" id="search_results" size="20" style="width: 200px;" onchange="changeImage()">
 [% FOREACH result IN results %]
   <option value="[%result.url%]">[%result.name%]</option>
 [% END %]
 </select>
 <br/>
 <input type="button" value=" + " onclick="addToList()" [% IF results.size == 0 %]disabled[%END%]/>
-</fieldset>

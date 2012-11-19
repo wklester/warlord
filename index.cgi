@@ -24,9 +24,11 @@ my $config = {
 my $info = CGI::Vars();
 
 if ($$info{a} && $$info{a} eq 'search') {
-    search($$info{name});
+    search($$info{name}, $$info{only_4e});
 } elsif ($$info{a} && $$info{a} eq 'pdf') {
     createPDF();
+} elsif ($$info{a} && $$info{a} eq 'text') {
+    createText();
 } else {
     main();
 }
@@ -44,11 +46,24 @@ sub createPDF {
     unlink "$ts.pdf";
 }
 
+sub createText {
+    my $data = decode_json($$info{mydata});
+    print "Content-Type:text/plain\n";
+    print "\n";
+    for my $card (@$data) {
+        print "$$card{num} $$card{name}\n";
+    }
+}
+
 sub search {
-    my ($name) = @_;
+    my ($name, $only_4e) = @_;
      
     my $encoded_name = uri_escape($name);
-    my $html = get("http://www.temple-of-lore.com/spoiler/search_results.php?name=$encoded_name");
+    my $url = "http://www.temple-of-lore.com/spoiler/search_results.php?name=$encoded_name";
+    if ($only_4e eq 'true') {
+        $url .= "&edition=3";
+    }
+    my $html = get($url);
     my @lines = split /\n/, $html;
     my @results = ();
     foreach my $line (@lines) {

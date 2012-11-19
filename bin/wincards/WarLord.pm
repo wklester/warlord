@@ -27,6 +27,9 @@ sub createPDF {
         }
     
         for (my $i = 0; $i < $num; $i++) {
+            $name =~ s/\(/\\(/g;
+            $name =~ s/\)/\\)/g;
+            print "$name";
             $files .= "\"$card_cache/$name.jpg\" ";
         }
     
