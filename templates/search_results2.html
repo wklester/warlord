@@ -1,0 +1,14 @@
+<script>
+var found_card_info = [
+[% FOREACH result IN results %]
+  { name: "[%result.name%]", url: "[%result.url%]", cardtype: "[%result.type%]", cardlevel: "[%result.level%]", cardclass: "[%result.class%]" },
+[% END %]
+]
+</script>
+<select name="search_results" id="search_results" size="20" style="width: 200px;" onchange="changeImage()">
+[% FOREACH result IN results %]
+  <option value="[%loop.index%]">[%result.name%]</option>
+[% END %]
+</select>
+<br/>
+<input type="button" value=" + " onclick="addToList()" [% IF results.size == 0 %]disabled[%END%]/>

@@ -1,0 +1,190 @@
+<html>
+<head>
+<title>Warlord Deck Builder - Jank Yanker</title>
+<style>
+  a {
+    text-decoration: none;
+    color: red;
+    font-weight: bold;
+    padding: 5px;
+  }
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="jquery.json-2.4.js"></script>
+<script>
+var card_list_json = [];
+var card_counter = 0;
+
+function getSearch()
+{
+  \$.ajax({
+    type: "GET",
+    url: 'index2.cgi',
+    cache: false,
+    data: "name=" + \$('#card_name').val() + "&a=search&only_4e=" + \$("#only_4e").is(':checked'),
+    success: function(data) {
+      \$('#search_results_div').html(data);
+    }
+  });
+}
+
+function changeImage() {
+  img_url = found_card_info[\$("#search_results").val()].url;
+  var img_html = '<img width="300" src="http://www.temple-of-lore.com/spoiler/' + img_url + '"/>';
+  \$('#card_image').html(img_html);
+}
+
+function addToList() {
+  var card_data = found_card_info[\$("#search_results").val()]
+
+  if (!card_data) {
+    return;
+  }
+
+  if (findCardName(card_data.name) >= 0) {
+    alert("Card " + card_data.name + "is already in deck.");
+    return
+  }
+
+  card_list_json.push({ num:1, name: card_data.name, cardtype: card_data.cardtype, classtype: card_data.cardclass, level: card_data.cardlevel });
+  
+  rebuildCardList();  
+}
+
+function changeNumber(i) {
+  card_list_json[i].num = \$('#card' + i).val();
+  rebuildCardList(); 
+}
+
+function deleteNumber(i) {
+  card_list_json.splice(i,1);
+  rebuildCardList(); 
+}
+
+function createPDF() {
+  uri = 'index2.cgi?a=pdf&mydata=' + \$.toJSON(card_list_json);
+  window.open(uri);
+}
+
+function setPDFUri() {
+  uri = 'index.cgi?a=pdf&mydata=' + \$.toJSON(card_list_json);
+  \$('#pdfUri').attr('href', uri);
+}
+
+function getTextList() {
+  uri = 'index2.cgi?a=text&mydata=' + \$.toJSON(card_list_json);
+  window.open(uri);
+}
+
+function findCardName(name) {
+  for (var i=0; i<card_list_json.length; i++) {
+    if (card_list_json[i].name == name) {
+      return i
+    }
+  }
+
+  return -1
+}
+
+function rebuildCardList() {
+  var html = "<table>";
+  var card_ct = 0;
+  var action_ct = 0;
+  var char_ct = 0;
+  var item_ct = 0;
+  for (var i=0; i<card_list_json.length; i++) {
+    html = html + "<tr>";
+    var funcCall2 = "deleteNumber(\"" + i + "\")";
+    html = html + "<td><a href='#' onclick='" + funcCall2 + "'> x </a>";
+    var funcCall = "changeNumber(\"" + i + "\")";
+    html = html + "<td><select id='card" + i + "' onchange='" + funcCall + "'>";
+    for (var j = 1; j <= 3; j++) {
+      if (card_list_json[i].num == j) {
+        html = html + "<option selected>" + j + "</option>";
+      } else {
+        html = html + "<option>" + j + "</option>";
+      }
+    }
+    html = html + "</select></td>";
+    html = html + "<td><p style='color:black;'>" + card_list_json[i].name + "</p></td>";
+    html = html + "</tr>";
+    card_ct = card_ct + parseInt(card_list_json[i].num);
+    if (card_list_json[i].cardtype == "Action") {
+      action_ct = action_ct + parseInt(card_list_json[i].num);
+    } else if (card_list_json[i].cardtype.indexOf("Char") != -1) {
+      char_ct = char_ct + parseInt(card_list_json[i].num);
+    } else if (card_list_json[i].cardtype == "Item") {
+      item_ct = item_ct + parseInt(card_list_json[i].num);
+    } else {
+      alert(card_list_json[i].cardtype)
+    }
+
+  }
+  html = html + "</table>";
+  \$('#card_list').html(html);
+
+  var card_total_html = '';
+  card_total_html = card_total_html + "<b>Total:</b> " + card_ct + " - ";
+  card_total_html = card_total_html + "(C:" + char_ct + ")/";
+  card_total_html = card_total_html + "(I:" + item_ct + ")/";
+  card_total_html = card_total_html + "(A:" + action_ct + ")";
+  if (card_ct > 0) {
+    //card_total_html = card_total_html + " | <a href='#' onclick='createPDF()'><img src='pdf_icon.png' width='16' border=0></a>";
+    card_total_html = card_total_html + " | <a id='pdfUri' href='#'><img src='pdf_icon.png' width='16' border=0></a>";
+    card_total_html = card_total_html + " | <a href='#' onclick='getTextList()'><img src='text_icon.png' width='16' border=0></a>";
+  }
+  \$('#card_list_total').html(card_total_html);
+  setPDFUri();
+}
+
+</script>
+</head>
+<body style="margin:0px;background-image:url('warlord_map_old.jpg');color:white">
+<br/>
+&nbsp;&nbsp;&nbsp;<img src="jank_logo.png">
+<form>
+  <table cellpadding=10 cellspacing=10 height="400">
+  <tr><td valign=top height="100%" >
+  <div id="search_div">
+    <fieldset style="height=100%">
+      <legend style="color:white">Search</legend>
+      <input type="text" id="card_name" size=15 name="card_name"/> | 
+      <input type="checkbox" id="only_4e" name="card_name"/>4E only | 
+      <input type="button" onclick="getSearch()" value="Xod"/>
+      <script>
+        \$('#card_name').keypress(function(event){
+          var keycode = (event.keyCode ? event.keyCode : event.which);
+          if(keycode == '13'){
+            getSearch();
+            return false;
+          }
+        });
+      </script>
+      <hr/>
+      <div id="search_results_div">
+        <select name="search_results" id="search_results" size="20" style="width: 200px" onchange="changeImage()">
+        </select>
+        <br/>
+        <input type="button" value=" + " onclick="addToList()" disabled/>
+      </div> 
+    </fieldset>
+  </div>
+  </td><td valign=top width="320" height="100%">
+    <fieldset style="height:100%"> 
+    <legend style="color:white">Card</legend>
+    <div id="card_image">
+    </div>
+    </fieldset>
+  <td valign=top width="300" height="100%">
+    <fieldset style="height:100%"> 
+    <legend style="color:white">Card List</legend>
+    <div id="card_list" style="height:400px; color:black; font-weigth:bold; background-color:white; overflow:auto; opacity:0.50; filter:alpha(opacity=50);">
+    </div>
+    <div id="card_list_total" style="background-color:white; color:black; padding:3px;"><b>Total:</b> 0</div>
+    </fieldset>
+  </div>
+  </td></tr>
+  </table>
+</form>
+</body>
+</html>
