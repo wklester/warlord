@@ -64,6 +64,11 @@ function createPDF() {
   window.open(uri);
 }
 
+function setPDFUri() {
+  uri = 'index.cgi?a=pdf&mydata=' + \$.toJSON(card_list_json);
+  \$('#pdfUri').attr('href', uri);
+}
+
 function getTextList() {
   uri = 'index.cgi?a=text&mydata=' + \$.toJSON(card_list_json);
   window.open(uri);
@@ -106,10 +111,12 @@ function rebuildCardList() {
   var card_total_html = '';
   card_total_html = card_total_html + "<b>Total:</b> " + card_ct;
   if (card_ct > 0) {
-    card_total_html = card_total_html + " | <a href='#' onclick='createPDF()'><img src='pdf_icon.png' width='16' border=0></a>";
+    //card_total_html = card_total_html + " | <a href='#' onclick='createPDF()'><img src='pdf_icon.png' width='16' border=0></a>";
+    card_total_html = card_total_html + " | <a id='pdfUri' href='#'><img src='pdf_icon.png' width='16' border=0></a>";
     card_total_html = card_total_html + " | <a href='#' onclick='getTextList()'><img src='text_icon.png' width='16' border=0></a>";
   }
   \$('#card_list_total').html(card_total_html);
+  setPDFUri();
 }
 
 </script>
