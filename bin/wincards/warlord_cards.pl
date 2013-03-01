@@ -29,6 +29,7 @@ while (my $line = <FILE>) {
         $name = $line;
     }
     
+    $name =~ s/^\s*//;
     if (!-e "cards/$name.jpg") {
         get_card_image($name);    
     }

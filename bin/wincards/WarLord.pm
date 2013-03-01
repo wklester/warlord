@@ -22,7 +22,12 @@ sub createPDF {
     foreach my $rec (@$data) {
         my ($num, $name) = ($$rec{num}, $$rec{name});
     
-        if (!-e "/$name.jpg") {
+        $name =~ s/^s*//;
+        $name =~ s/\(//g;
+        $name =~ s/\)//g;
+        print STDERR "$card_cache/$name.jpg\n";
+        if (!-e "$card_cache/$name.jpg") {
+            print STDERR "NOT HERE!\n\n";
             get_card_image($name);    
         }
     
