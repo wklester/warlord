@@ -72,24 +72,13 @@ sub search {
             my $img_url = $1;
             $line =~ /;>(.*?)<\/A>/;
             my $found = $1;
-            $line =~ /view.php\?card=(\d*)/;
-            my $card_type = "Unknown";
-            my $card_level = "Unknown";
-            my $card_class = "Unknown";
-            if ($1) {
-                my $details_html = get("http://www.temple-of-lore.com/spoiler/view.php?card=$1");
-                $details_html =~ /Level (\d*) \- (.*?) \- (.*)\<BR/;
-                $card_level = $1;
-                $card_type = $2;
-                $card_class = $3; 
-            }
-            push @results, { name => $found, url => $img_url, level => $card_level, type => $card_type, class => $card_class };
+            push @results, { name => $found, url => $img_url };
         }
     }
 
     my $template = Template->new($config);
     print CGI::header("text/html");
-    my $input = 'search_results2.html';
+    my $input = 'search_results.html';
     my $vars = { results => \@results };
     $template->process($input, $vars)
 }
@@ -98,7 +87,7 @@ sub main {
     my $template = Template->new($config);
 
     print CGI::header("text/html");
-    my $input = 'index2.html';
+    my $input = 'index.html';
     my $vars = {};
     $template->process($input, $vars) || die "Template process failed: ", $template->error(), "\n"
 }
