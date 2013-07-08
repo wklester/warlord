@@ -144,12 +144,18 @@ function rebuildCardList() {
 &nbsp;&nbsp;&nbsp;<img src="jank_logo.png">
 <form>
   <table cellpadding=10 cellspacing=10 height="400">
-  <tr><td valign=top height="100%" >
+  <tr>
+  <td colspan=3>
+    <li>Does not enforce all deck building rules. Read the <a href="http://www.warlordccg.de/wld/blog/wp-content/uploads/2008/06/4e-rules.pdf" target="_blank">rules</a> for deck building.
+    <li>See <a href="http://www.temple-of-lore.com/spoiler/search.php" target="_blank">Temple of Lore</a> to do more complex searches and then search for that card by name on Jank Yanker.
+  </td>
+  </tr><tr>
+  <td valign=top height="100%" >
   <div id="search_div">
     <fieldset style="height=100%">
       <legend style="color:white">Search</legend>
       <input type="text" id="card_name" size=15 name="card_name"/> | 
-      <input type="checkbox" id="only_4e" name="card_name"/>4E only | 
+      <input type="checkbox" id="only_4e" name="card_name" checked/>4E only | 
       <input type="button" onclick="getSearch()" value="Xod"/>
       <script>
         \$('#card_name').keypress(function(event){
