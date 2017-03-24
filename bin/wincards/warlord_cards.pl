@@ -42,7 +42,8 @@ while (my $line = <FILE>) {
 }
 
 #system("montage -tile 3x3 -geometry ${width}x${height}+25+15 $files $dat_name.pdf");
-system("montage -density \"157\" -tile 3x3 -geometry ${width}x${height}+25+15 $files $outfile.pdf");
+#system("montage -density \"157\" -tile 3x3 -geometry ${width}x${height}+25+15 $files $outfile.pdf");
+system("montage -density \"157\" -tile 3x3 -geometry +25+15 $files $outfile.pdf");
 
 sub get_card_image {
     my ($name) = @_;

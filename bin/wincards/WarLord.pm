@@ -41,7 +41,8 @@ sub createPDF {
         $ct++;
     }
 
-    system("montage -density \"157\" -tile 3x3 -geometry ${width}x${height}+25+15 $files $outfile.pdf");
+    system("montage -density \"157\" -tile 3x3 -geometry +25+15 $files $outfile.pdf");
+    #system("montage -density \"157\" -tile 3x3 -geometry ${width}x${height}+25+15 $files $outfile.pdf");
     #system("montage -units PixelsPerInch -tile 3x3 -geometry ${width}x${height}+25+15 $files $outfile.big.pdf");
     #system("convert $outfile.big.pdf -density \"300\" -resize \"2550x3300\" $outfile.pdf");
     #unlink("$outfile.big.pdf");
