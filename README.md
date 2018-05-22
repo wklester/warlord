@@ -4,6 +4,7 @@ temple of lore website with permission from his owner.
 The program was running on a ubuntu 12 server.  It uses perl and image magick. The site was served using
 apache and perl cgi.  Below is the section of apache config I used in /etc/apache2/site-available/default
 
+# Older apache
 <VirtualHost *>
   ServerName warlord.e-kevin.com
 
@@ -18,7 +19,6 @@ apache and perl cgi.  Below is the section of apache config I used in /etc/apach
 	</Directory>
 </VirtualHost>
 
-== OR ==
 
 # Apache 2.4
 <VirtualHost *>                                                                               
