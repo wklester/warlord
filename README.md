@@ -18,6 +18,24 @@ apache and perl cgi.  Below is the section of apache config I used in /etc/apach
 	</Directory>
 </VirtualHost>
 
+=============================================
+OR
+=============================================
+
+# Apache 2.4
+<VirtualHost *>                                                                               
+  #ServerName warlord.e-kevin.com    
+    
+  DocumentRoot /home/sites/warlord    
+  <Directory /home/sites/warlord>    
+    AllowOverride None    
+    AddHandler cgi-script .cgi .pl    
+    Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch    
+    Require all granted    
+    DirectoryIndex index.cgi    
+  </Directory>    
+</VirtualHost>
+
 For the perl side you will need to make sure these perl modules are installed.
  
 use CGI;
