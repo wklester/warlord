@@ -18,9 +18,7 @@ apache and perl cgi.  Below is the section of apache config I used in /etc/apach
 	</Directory>
 </VirtualHost>
 
-----------------------------------
-OR
-----------------------------------
+== OR ==
 
 # Apache 2.4
 <VirtualHost *>                                                                               
