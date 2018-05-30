@@ -3,7 +3,6 @@
 use CGI;
 use Template;
 use FindBin qw($Bin);
-use LWP::Simple;
 use URI::Escape;
 use JSON;
 use File::Slurp;
@@ -57,7 +56,7 @@ sub createText {
 
 sub search {
     my ($name, $only_4e) = @_;
-     
+
     my $encoded_name = uri_escape($name);
     my $url = "http://www.temple-of-lore.com/spoiler/search_results.php?name=$encoded_name";
     if ($only_4e eq 'true') {
@@ -81,7 +80,7 @@ sub search {
                 $details_html =~ /Level (\d*) \- (.*?) \- (.*)\<BR/;
                 $card_level = $1;
                 $card_type = $2;
-                $card_class = $3; 
+                $card_class = $3;
             }
             push @results, { name => $found, url => $img_url, level => $card_level, type => $card_type, class => $card_class };
         }
