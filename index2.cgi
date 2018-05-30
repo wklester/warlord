@@ -3,6 +3,7 @@
 use CGI;
 use Template;
 use FindBin qw($Bin);
+use LWP::Simple;
 use URI::Escape;
 use JSON;
 use File::Slurp;
